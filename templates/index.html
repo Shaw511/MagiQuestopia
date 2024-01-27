@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>MagiQuestopia WELCOME</title>
+    <style>
+        /* 页面背景渐变效果 */
+        body {
+            background: linear-gradient(to bottom, #ff00cc, #3333ff);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        /* 页面标题样式 */
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        /* 页面内容样式 */
+        p {
+            font-size: 24px;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        /* 按钮样式 */
+        .btn {
+            padding: 10px 20px;
+            background-color: #ff9900;
+            color: #fff;
+            font-size: 20px;
+            border: none;
+            border-radius: 5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:hover {
+            background-color: #ff6600;
+        }
+    </style>
+</head>
+<body>
+<h1>Welcome to MagiQuestopia!</h1>
+<p>This is a demonstration of a cool and stylish HTML page.</p>
+<button class="btn">Click Me</button>
+
+<script>
+    // 添加按钮点击事件
+    var button = document.querySelector('.btn');
+    button.addEventListener('click', function() {
+        alert('You clicked the button!');
+    });
+</script>
+</body>
+</html>
