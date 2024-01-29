@@ -1,0 +1,30 @@
+@font-face {
+    font-family: "Atkinson";
+    src: url('./Atkinson-signature-2.otf') format('truetype');
+}
+
+@font-face {
+    font-family: "Bleeding_cowboys";
+    src: url('./Bleeding_Cowboys.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: "Hillstone";
+    src: url('./Hillstone-2.otf') format('truetype');
+}
+@font-face {
+    font-family: "SuXin-cn";
+    src: url('./SuXinShiGuYinSongJian-1.ttf') format('truetype');
+}
+@font-face {
+    font-family: "Xangda";
+    src: url('./Xangda-Shiny-2.ttf') format('truetype');
+}
+@font-face {
+    font-family: "RoyalKing";
+    src: url('./RoyalKing-Free-2.ttf') format('truetype');
+}
+@font-face {
+    font-family: "Mathematical";
+    src: url('./Mathematical-2.ttf') format('truetype');
+}

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"io/ioutil"
+	"log"
 	"net"
 	"net/http"
 )
@@ -12,6 +13,13 @@ type User struct {
 	Name  string
 	Email string
 }
+
+type Todo struct {
+	ID    int    `json:"id"`
+	Title string `json:"title"`
+}
+
+var todos []Todo
 
 func printIP() {
 	// 局域网IP获取
@@ -91,11 +99,15 @@ func myWeb(wr http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	printIP()
-	http.HandleFunc("/", myWeb)
-	err := http.ListenAndServe("localhost:8080", nil)
-	if err != nil {
-		fmt.Println("Err in Server：", err)
-	}
+	//printIP()
+	// 设置静态文件目录
+	fs := http.FileServer(http.Dir("my-app/build"))
+
+	// 设置路由，将所有请求转发到React前端
+	http.Handle("/", fs)
+
+	// 启动HTTP服务器
+	log.Println("Server started on http://localhost:8080")
+	log.Fatal(http.ListenAndServe(":8080", nil))
 
 }

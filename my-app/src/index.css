@@ -1,0 +1,116 @@
+/* 页面背景渐变效果 */
+.App {
+  background: linear-gradient(to bottom, #ff00cc, #3333ff);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+
+/* 页面标题样式 */
+h1 {
+  font-size: 60px;
+  color:ghostwhite;
+  margin-bottom: 20px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* 页面内容样式 */
+p {
+  font-family: SuXin-cn;
+  font-size: 32px;
+  text-align: center;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+
+.btn:hover {
+  background-color: #ff6600;
+}
+
+
+.login-container {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.login-btn {
+  background-color: #e01862;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.gothic-font {
+  font-family: 'Gothic', sans-serif;
+}
+
+.login-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.login-modal-content {
+  max-width: 400px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.login-modal-content h2 {
+  margin-bottom: 20px;
+}
+
+.login-modal-content form {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.login-modal-content input {
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.login-modal-content button[type='submit'] {
+  padding: 10px 20px;
+  background-color: #bd4974;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.login-modal-content button.close-btn {
+  padding: 5px 10px;
+  background-color: #bd4974;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.login-modal-content button.close-btn:hover {
+  background-color: #999;
+}
