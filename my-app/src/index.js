@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import './fonts/font.css'
@@ -40,11 +40,30 @@ const Login = () => {
 };
 
 function App() {
+    const [isMagicCircleVisible, setIsMagicCircleVisible] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 100) {
+                setIsMagicCircleVisible(true);
+            } else {
+                setIsMagicCircleVisible(false);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
     return (
         <div className="App">
             <h1>Welcome to MagiQuestopia!</h1>
-            <p>书鬼乌托邦，构建你的个人魔法图书馆</p>
-            <Login />
+            <p>「 书鬼乌托邦，构建你的个人魔法图书馆 」</p>
+            <p1>▽</p1>
+            <div className={`magic-circle ${isMagicCircleVisible && 'show'}`}></div>
+            <Login/>
         </div>
     );
 
@@ -52,7 +71,7 @@ function App() {
 
 ReactDOM.render(
     <React.StrictMode>
-        <App />
+        <App/>
     </React.StrictMode>,
     document.getElementById('root')
 );

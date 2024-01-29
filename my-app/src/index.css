@@ -1,7 +1,7 @@
 /* 页面背景渐变效果 */
 .App {
   background: linear-gradient(to bottom, #ff00cc, #3333ff);
-  height: 100vh;
+  height: 200vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -12,14 +12,30 @@
 
 /* 页面标题样式 */
 h1 {
-  font-size: 60px;
+  position: absolute;
+  top: 300px;
+  left: 35%;
+  font-size: 48px;
   color:ghostwhite;
   margin-bottom: 20px;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 /* 页面内容样式 */
 p {
+  position: absolute;
+  top: 50%;
+  left: 35%;
+  font-family: SuXin-cn;
+  font-size: 32px;
+  text-align: center;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+p1 {
+  position: absolute;
+  top: 60%;
+  left: 50%;
   font-family: SuXin-cn;
   font-size: 32px;
   text-align: center;
@@ -114,3 +130,42 @@ p {
 .login-modal-content button.close-btn:hover {
   background-color: #999;
 }
+
+.magic-circle {
+  width: 400px;
+  height: 400px;
+  background-image: url("magic_circle.png");
+  background-size: cover;
+  border-radius: 50%;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+
+}
+
+@keyframes magic-animation {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(180deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg) scale(1);
+    opacity: 0;
+  }
+}
+
+
+.magic-circle.show {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  animation: magic-animation 20s infinite;
+}
+
+
