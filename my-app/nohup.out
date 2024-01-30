@@ -1,0 +1,10 @@
+
+> my-app@0.1.0 start
+> react-scripts start
+
+sh: 1: react-scripts: not found
+
+> my-app@0.1.0 start
+> react-scripts start
+
+sh: 1: react-scripts: not found

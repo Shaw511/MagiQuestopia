@@ -1,0 +1,11 @@
+局域网IP获取如下：
+IPv4 Address: 10.0.0.7
+IPv6 Address: fe80::5054:ff:feee:1f4
+公网IP获取如下:
+Public IP: 43.153.206.198
+局域网IP获取如下：
+IPv4 Address: 10.0.0.7
+IPv6 Address: fe80::5054:ff:feee:1f4
+公网IP获取如下:
+Public IP: 43.153.206.198
+Err in Server： listen tcp :80: bind: address already in use
