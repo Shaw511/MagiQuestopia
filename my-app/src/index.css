@@ -1,11 +1,12 @@
 /* 页面背景渐变效果 */
 .App {
   background: linear-gradient(to bottom, #ff00cc, #3333ff);
-  height: 200vh;
+  height: 2000px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  position: relative;
   color: #fff;
   font-family: Arial, sans-serif;
 }
@@ -24,7 +25,7 @@ h1 {
 /* 页面内容样式 */
 p {
   position: absolute;
-  top: 50%;
+  top: 425px;
   left: 35%;
   font-family: SuXin-cn;
   font-size: 32px;
@@ -34,7 +35,7 @@ p {
 
 p1 {
   position: absolute;
-  top: 60%;
+  top: 525px;
   left: 50%;
   font-family: SuXin-cn;
   font-size: 32px;
@@ -137,9 +138,9 @@ p1 {
   background-image: url("magic_circle.png");
   background-size: cover;
   border-radius: 50%;
-  position: fixed;
+  position: absolute;
   top: 50%;
-  left: 50%;
+  left: 30%;
   transform: translate(-50%, -50%) scale(0);
   opacity: 0;
   transition: opacity 1s ease-in-out, transform 1s ease-in-out;
@@ -168,4 +169,128 @@ p1 {
   animation: magic-animation 20s infinite;
 }
 
+.search-bar {
+    position: absolute;
+    top: 15px;
+    right: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
+.search-bar input {
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    background-color: #f5f5f5;
+    color: #333;
+    outline: none;
+    font-size: 14px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar button {
+    padding: 10px 20px;
+    margin-left: 10px;
+    border: none;
+    border-radius: 20px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+}
+
+.search-bar button:hover {
+    background-color: #0056b3;
+}
+
+.logo {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 200px;
+  height: 100px;
+}
+
+.menu-container {
+  display: flex;
+  position: absolute;
+  top: 50px;
+  left: 300px;
+}
+
+.menu {
+  position: relative;
+}
+
+.menu-btn {
+  background-color: rgba(0, 123, 255, 0.01);
+  color: #fff;
+  padding: 20px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: #333;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.menu:hover .dropdown-content {
+  display: block;
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  position: absolute;
+  bottom: 820px;
+  right: 400px;
+  width: 300px;
+  padding: 0 20px;
+}
+
+
+.tab {
+  position: relative;
+}
+
+.tab-content {
+  padding: 1px;
+  color: #e8d3d3;
+  font-size: 25px;
+  font-family: SuXin-cn;
+}
+
+.glass-effect {
+  /* 添加你的分支玻璃弹窗样式 */
+  /* 这里只是一个示例样式 */
+  background-color: #bd4974;
+  border: 1px solid #c79696;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  display: none;
+  position: absolute;
+  top: 0;
+  right: -200px;
+  width: 200px;
+  padding: 10px;
+}
+
+.tab:hover .glass-effect {
+  display: block;
+}
