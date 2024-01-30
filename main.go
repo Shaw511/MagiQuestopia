@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"html/template"
 	"io/ioutil"
 	"log"
 	"net"
@@ -75,39 +74,21 @@ func printIP() {
 	fmt.Println("Public IP:", string(ip))
 }
 
-func myWeb(wr http.ResponseWriter, req *http.Request) {
-	//fmt.Fprintf(wr, "服务器开启")
-	// 解析模板文件
-	templates, err := template.ParseFiles("templates/index.html")
-	if err != nil {
-		fmt.Println("Failed to parse template:", err)
-		return
-	}
-	// 创建一个数据对象
-	user := User{
-		Name:  "John Doe",
-		Email: "johndoe@example.com",
-	}
-
-	// 执行模板，并将生成的内容写入//
-	err = templates.ExecuteTemplate(wr, "index.html", user)
-	if err != nil {
-		fmt.Println("Failed to execute template:", err)
-		return
-	}
-
-}
+//func homeHandler(w http.ResponseWriter, r *http.Request) {
+//	fmt.Fprintf(w, "Hello, World!")
+//}
 
 func main() {
 	//printIP()
-	// 设置静态文件目录
-	fs := http.FileServer(http.Dir("my-app/build"))
 
-	// 设置路由，将所有请求转发到React前端
+	// 配置静态文件路由
+	staticDir := "my-app/build" // 替换成您的前端构建版本的路径
+	fs := http.FileServer(http.Dir(staticDir))
 	http.Handle("/", fs)
 
-	// 启动HTTP服务器
-	log.Println("Server started on http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	// 启动服务器，监听端口
+	port := ":8000"
+	fmt.Printf("Server listening on port%s\n", port)
+	log.Fatal(http.ListenAndServe(port, nil))
 
 }
