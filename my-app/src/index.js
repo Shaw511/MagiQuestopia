@@ -72,17 +72,17 @@ function App() {
                 <div className="menu">
                     <button className="menu-btn">我的书架</button>
                     <div className="dropdown-content">
-                        <a href="#">选项4</a>
-                        <a href="#">选项5</a>
-                        <a href="#">选项6</a>
+                        <a href="#">选项1</a>
+                        <a href="#">选项2</a>
+                        <a href="#">选项3</a>
                     </div>
                 </div>
                 <div className="menu">
                     <button className="menu-btn">订阅我们</button>
                     <div className="dropdown-content">
-                        <a href="#">选项7</a>
-                        <a href="#">选项8</a>
-                        <a href="#">选项9</a>
+                        <a href="#">选项1</a>
+                        <a href="#">选项2</a>
+                        <a href="#">选项3</a>
                     </div>
                 </div>
             </div>
