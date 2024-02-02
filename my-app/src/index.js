@@ -13,23 +13,57 @@ const Login = () => {
     const handleClose = () => {
         setIsOpen(false);
     }
+
+    const [activeTab, setActivTab] = useState(1);
+
+    const handleTabClick = (login_tab) => {
+        setActivTab(login_tab);
+    };
+
+
     return(
         <div className="login-container">
             <button className="login-btn" onClick={handleClick}>
-                登录
+                登录 / 注册
             </button>
             {isOpen && (
                 <div className="login-modal">
                     <div className="login-modal-content">
-                        <h2>登录</h2>
-                        <form>
-                            <input type="text" placeholder="用户名/手机号" />
-                            <input type="password" placeholder="密码"/>
-                            <button type="submit">登录</button>
-                        </form>
-                        <button className="close-btn" onClick={handleClose}>
-                            关闭
-                        </button>
+                        <div className="login-tabs">
+                            <div className={`login_tab ${activeTab === 1 ? "active" : ""}`}
+                                 onClick={() => handleTabClick(1)} onClick={() => handleTabClick(1)}>注册
+                            </div>
+                            <div className={`login_tab ${activeTab === 2 ? "active" : ""}`}
+                                 onClick={() => handleTabClick(2)} onClick={() => handleTabClick(2)}>登录
+                            </div>
+                        </div>
+                        {activeTab === 1 ? (
+                            <div>
+                                <h2>注册</h2>
+                                <form>
+                                    <input type="text" placeholder="输入注册账号名"/>
+                                    <input type="password" placeholder="输入注册密码"/>
+                                    <button type="submit">注册</button>
+                                </form>
+                                <button className="close-btn" onClick={handleClose}>
+                                    关闭
+                                </button>
+                            </div>
+                        ): (
+                            <div>
+                                <h2>登录</h2>
+                                <form>
+                                    <input type="text" placeholder="用户名/手机号"/>
+                                    <input type="password" placeholder="密码"/>
+                                    <button type="submit">登录</button>
+                                </form>
+                                <button className="close-btn" onClick={handleClose}>
+                                    关闭
+                                </button>
+                            </div>
+                        )}
+
+
                     </div>
                 </div>
             )
@@ -79,6 +113,14 @@ function App() {
                 </div>
                 <div className="menu">
                     <button className="menu-btn">订阅我们</button>
+                    <div className="dropdown-content">
+                        <a href="#">选项1</a>
+                        <a href="#">选项2</a>
+                        <a href="#">选项3</a>
+                    </div>
+                </div>
+                <div className="menu">
+                    <button className="menu-btn">个人展厅</button>
                     <div className="dropdown-content">
                         <a href="#">选项1</a>
                         <a href="#">选项2</a>
