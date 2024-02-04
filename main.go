@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 	"io/ioutil"
 	"log"
 	"net"
@@ -10,8 +12,9 @@ import (
 )
 
 type User struct {
-	Name  string
-	Email string
+	ID       uint   `gorm:"primaryKey"`
+	Username string `gorm:"unique"`
+	Password string
 }
 
 type Todo struct {
@@ -20,6 +23,24 @@ type Todo struct {
 }
 
 var todos []Todo
+var db *gorm.DB
+
+func setupDB() (*gorm.DB, error) {
+	// 创建数据库连接
+	dsn := "username:password@tcp(localhost:3306)/database?charset=utf8mb4&parseTime=True&loc=Local"
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		return nil, err
+	}
+
+	// 进行数据库迁移
+	err = db.AutoMigrate(&User{})
+	if err != nil {
+		return nil, err
+	}
+
+	return db, nil
+}
 
 func handleRegister(w http.ResponseWriter, r *http.Request) {
 	//解析请求体中的JSON数据
@@ -35,6 +56,18 @@ func handleRegister(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//将账号的密码存储到数据库中
+	// 创建用户对象
+	user := User{
+		Username: requestBody.Username,
+		Password: requestBody.Password,
+	}
+
+	// 插入数据到数据库中
+	result := db.Create(&user)
+	if result.Error != nil {
+		http.Error(w, result.Error.Error(), http.StatusInternalServerError)
+		return
+	}
 
 	//返回响应给前端
 	response := struct {
@@ -58,7 +91,21 @@ func handleLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//在数据库中查询账号密码信息
+	//在数据库中查询账号密码信息，如果输入的用户名和密码对应，则继续登录，否则返回错误
+	var user User
+	result := db.Where("username = ?", requestBody.Username).First(&user)
+	if result.Error != nil {
+		// 用户不存在
+		http.Error(w, "Invalid username or password", http.StatusUnauthorized)
+		return
+	}
+
+	// 验证密码是否匹配
+	if user.Password != requestBody.Password {
+		// 密码错误
+		http.Error(w, "Invalid username or password", http.StatusUnauthorized)
+		return
+	}
 
 	//返回响应给前端
 	response := struct {
@@ -128,7 +175,17 @@ func printIP() {
 //}
 
 func main() {
+	// 初始化数据库连接
+	db, err := setupDB()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer func() {
+		dbInstance, _ := db.DB()
+		_ = dbInstance.Close()
+	}()
 	//printIP()
+
 	// 注册路由处理函数
 	http.HandleFunc("/api/register", handleRegister)
 	http.HandleFunc("/api/login", handleLogin)

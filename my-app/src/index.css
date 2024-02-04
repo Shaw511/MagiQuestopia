@@ -65,12 +65,22 @@ p1 {
   cursor: pointer;
 }
 
+.account-info{
+  top: 10px;
+  display: flex;
+  align-items: center;
+}
 .user_avatar{
   width: 40px;
   height: 40px;
+  display: inline-block;
+  vertical-align: middle;
 }
 .account-label{
-  font-size: 25px;
+  font-size: 22px;
+  color: #999999;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .gothic-font {
@@ -205,7 +215,7 @@ p1 {
 .search-bar {
     position: absolute;
     top: 15px;
-    right: 200px;
+    right: 300px;
     display: flex;
     align-items: center;
     justify-content: center;

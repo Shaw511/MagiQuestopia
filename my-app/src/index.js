@@ -73,7 +73,7 @@ const Login = () => {
             {loggedIn && (
                 <div className="account-info">
                     <img className="user_avatar" src={require('./user-avatar.png')}  alt="User Avatar"/>
-                    <span className="account-label"> {username} </span>
+                    <span className="account-label">   {username}  </span>
                 </div>
             )}
             {!loggedIn && (
