@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -19,6 +20,54 @@ type Todo struct {
 }
 
 var todos []Todo
+
+func handleRegister(w http.ResponseWriter, r *http.Request) {
+	//解析请求体中的JSON数据
+	var requestBody struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+	err := json.NewDecoder(r.Body).Decode(&requestBody)
+	if err != nil {
+		//处理错误
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	//将账号的密码存储到数据库中
+
+	//返回响应给前端
+	response := struct {
+		Success bool `json:"success"`
+	}{
+		Success: true,
+	}
+	json.NewEncoder(w).Encode(response)
+}
+
+func handleLogin(w http.ResponseWriter, r *http.Request) {
+	//解析请求体中的JSON数据
+	var requestBody struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+	err := json.NewDecoder(r.Body).Decode(&requestBody)
+	if err != nil {
+		//处理错误
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	//在数据库中查询账号密码信息
+
+	//返回响应给前端
+	response := struct {
+		Success bool `json:"success"`
+	}{
+		Success: true,
+	}
+	json.NewEncoder(w).Encode(response)
+}
 
 func printIP() {
 	// 局域网IP获取
@@ -80,6 +129,9 @@ func printIP() {
 
 func main() {
 	//printIP()
+	// 注册路由处理函数
+	http.HandleFunc("/api/register", handleRegister)
+	http.HandleFunc("/api/login", handleLogin)
 
 	// 配置静态文件路由
 	staticDir := "my-app/build" // 替换成您的前端构建版本的路径

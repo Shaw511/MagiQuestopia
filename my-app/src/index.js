@@ -5,6 +5,10 @@ import './fonts/font.css'
 
 const Login = () => {
     const [isOpen, setIsOpen] = useState(false)
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [loggedIn, setLoggedIn] = useState(false);
+
 
     const handleClick = () => {
         setIsOpen(true)
@@ -20,12 +24,63 @@ const Login = () => {
         setActivTab(login_tab);
     };
 
+    const handleRegistSubmit = (e) =>{
+        e.preventDefault();
 
-    return(
+        //发送POST请求给后端的API接口
+        fetch('/api/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type' : 'application/json',
+            },
+            body: JSON.stringify({username, password}),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                //注册成功后处理逻辑
+                setLoggedIn(true);
+                handleClose();
+            })
+            .catch((error) =>{
+                //处理错误
+            });
+    }
+
+    const handleLoginSubmit = (e) =>{
+        e.preventDefault();
+
+        //发送POST请求给后端的API接口
+        fetch('/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type' : 'application/json',
+            },
+            body: JSON.stringify({username, password}),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                //登录成功后处理逻辑
+                setLoggedIn(true);
+                handleClose();
+            })
+            .catch((error) =>{
+                //处理错误
+            });
+    }
+
+    return (
         <div className="login-container">
-            <button className="login-btn" onClick={handleClick}>
-                登录 / 注册
-            </button>
+            {loggedIn && (
+                <div className="account-info">
+                    <img className="user_avatar" src={require('./user-avatar.png')}  alt="User Avatar"/>
+                    <span className="account-label"> {username} </span>
+                </div>
+            )}
+            {!loggedIn && (
+                    <button className="login-btn" onClick={handleClick}>
+                        登录 / 注册
+                    </button>
+                )}
             {isOpen && (
                 <div className="login-modal">
                     <div className="login-modal-content">
@@ -36,14 +91,14 @@ const Login = () => {
                             <div className={`login_tab ${activeTab === 2 ? "active" : ""}`}
                                  onClick={() => handleTabClick(2)} onClick={() => handleTabClick(2)}>登录
                             </div>
-                        </div>
+                        </div >
                         {activeTab === 1 ? (
                             <div>
-                                <h2>注册</h2>
-                                <form>
-                                    <input type="text" placeholder="输入注册账号名"/>
-                                    <input type="password" placeholder="输入注册密码"/>
-                                    <button type="submit">注册</button>
+                                <form className='login-form' onSubmit={handleRegistSubmit}>
+                                    <img className="logo1" src={require('./magi-logo-w.png')}/>
+                                    <input type="text" placeholder="  输入注册账号名" onChange={(e) => setUsername(e.target.value)}/>
+                                    <input type="password" placeholder="  输入注册密码" onChange={(e)=> setPassword(e.target.value)}/>
+                                    <button className="register-btn" type="submit">注册</button>
                                 </form>
                                 <button className="close-btn" onClick={handleClose}>
                                     关闭
@@ -51,11 +106,11 @@ const Login = () => {
                             </div>
                         ): (
                             <div>
-                                <h2>登录</h2>
-                                <form>
-                                    <input type="text" placeholder="用户名/手机号"/>
-                                    <input type="password" placeholder="密码"/>
-                                    <button type="submit">登录</button>
+                                <form className='login-form' onSubmit={handleLoginSubmit}>
+                                    <img className="logo1" src={require('./magi-logo-w.png')}/>
+                                    <input type="text" placeholder="  用户名/手机号" onChange={(e) => setUsername(e.target.value)}/>
+                                    <input type="password" placeholder="  密码" onChange={(e)=> setPassword(e.target.value)}/>
+                                    <button className="login-btn" type="submit">登录</button>
                                 </form>
                                 <button className="close-btn" onClick={handleClose}>
                                     关闭
