@@ -27,7 +27,7 @@ var db *gorm.DB
 
 func setupDB() (*gorm.DB, error) {
 	// 创建数据库连接
-	dsn := "username:password@tcp(localhost:3306)/database?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := "root:qqdxgw2438@tcp(43.153.206.198:3306)/DB001?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, err
