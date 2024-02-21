@@ -9,6 +9,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os/exec"
 )
 
 type User struct {
@@ -174,21 +175,41 @@ func printIP() {
 //	fmt.Fprintf(w, "Hello, World!")
 //}
 
-func main() {
-	// 初始化数据库连接
-	db, err := setupDB()
+func runCommand(w http.ResponseWriter, r *http.Request) {
+	command := r.URL.Query().Get("command")
+	dataset := r.URL.Query().Get("dataset")
+	numPerturbSamples := r.URL.Query().Get("numPerturbSamples")
+	topNode := r.URL.Query().Get("topNode")
+
+	cmd := exec.Command(command, "--dataset", dataset, "--num-perturb-samples", numPerturbSamples, "--top-node", topNode)
+	output, err := cmd.CombinedOutput()
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		fmt.Fprintf(w, "Error occurred while running the command.")
+		return
 	}
-	defer func() {
-		dbInstance, _ := db.DB()
-		_ = dbInstance.Close()
-	}()
+
+	fmt.Fprintf(w, string(output))
+}
+
+func main() {
+	//// 初始化数据库连接 先不管它
+	//db, err := setupDB()
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//defer func() {
+	//	dbInstance, _ := db.DB()
+	//	_ = dbInstance.Close()
+	//}()
 	//printIP()
 
 	// 注册路由处理函数
 	http.HandleFunc("/api/register", handleRegister)
 	http.HandleFunc("/api/login", handleLogin)
+
+	//2月22号测试后端
+	http.HandleFunc("/api/run-command", runCommand)
 
 	// 配置静态文件路由
 	staticDir := "my-app/build" // 替换成您的前端构建版本的路径
