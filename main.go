@@ -10,6 +10,7 @@ import (
 	"net"
 	"net/http"
 	"os/exec"
+	"sync"
 )
 
 type User struct {
@@ -192,8 +193,80 @@ func runCommand(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(output))
 }
 
+func sendToQueue(wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	// 连接消息队列
+	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
+	if err != nil {
+		log.Fatalf("Failed to connect RabbitMQ: %v", err)
+	}
+	defer conn.Close()
+
+	// 创建消息队列通道
+	channel, err := conn.Channel()
+	if err != nil {
+		log.Fatalf("Failed to open channel: %v", err)
+	}
+	defer channel.Close()
+
+	// 发送消息到消息队列
+	err = channel.Publish(
+		"",                // exchange
+		"algorithm_queue", // queue name
+		false,             // mandatory
+		false,             // immediate
+		amqp.Publishing{
+			ContentType: "text/plain",
+			Body:        []byte("python3 GenGroundTruth.py --dataset your_dataset_name"),
+		},
+	)
+	if err != nil {
+		log.Fatalf("Failed to publish message: %v", err)
+	}
+
+	fmt.Println("Message sent to RabbitMQ")
+}
+
+func consumeFromQueue(wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	// 连接消息队列
+	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
+	if err != nil {
+		log.Fatalf("Failed to connect RabbitMQ: %v", err)
+	}
+	defer conn.Close()
+
+	// 创建消息队列通道
+	channel, err := conn.Channel()
+	if err != nil {
+		log.Fatalf("Failed to open channel: %v", err)
+	}
+	defer channel.Close()
+
+	// 接收消息队列中的返回结果
+	msgs, err := channel.Consume(
+		"algorithm_result_queue", // queue name for result
+		"",                       // consumer
+		true,                     // auto-ack
+		false,                    // exclusive
+		false,                    // no-local
+		false,                    // no-wait
+		nil,                      // args
+	)
+	if err != nil {
+		log.Fatalf("Failed to consume messages: %v", err)
+	}
+
+	for msg := range msgs {
+		// 处理返回结果
+		fmt.Println("Received result:", string(msg.Body))
+	}
+}
+
 func main() {
-	//// 初始化数据库连接 先不管它
+	//// 初始化数据库连接 暂不测试数据库功能
 	//db, err := setupDB()
 	//if err != nil {
 	//	log.Fatal(err)
@@ -204,12 +277,19 @@ func main() {
 	//}()
 	//printIP()
 
-	// 注册路由处理函数
-	http.HandleFunc("/api/register", handleRegister)
-	http.HandleFunc("/api/login", handleLogin)
+	//// 注册路由处理函数 暂不调试注册登录功能
+	//http.HandleFunc("/api/register", handleRegister)
+	//http.HandleFunc("/api/login", handleLogin)
 
-	//2月22号测试后端
-	http.HandleFunc("/api/run-command", runCommand)
+	var wg sync.WaitGroup
+
+	// 启动发送消息到消息队列的goroutine
+	wg.Add(1)
+	go sendToQueue(&wg)
+
+	// 启动接收消息队列中返回结果的goroutine
+	wg.Add(1)
+	go consumeFromQueue(&wg)
 
 	// 配置静态文件路由
 	staticDir := "my-app/build" // 替换成您的前端构建版本的路径
@@ -218,7 +298,11 @@ func main() {
 
 	// 启动服务器，监听端口
 	port := ":8000"
-	fmt.Printf("Server listening on port%s\n", port)
+	fmt.Printf("Server listening on port %s\n", port)
+
+	// 等待发送消息和接收返回结果的goroutine完成
+	wg.Wait()
+
 	log.Fatal(http.ListenAndServe(port, nil))
 
 }

@@ -22,63 +22,71 @@ function Algorithm () {
     };
 
     return (
-        <div>
-            <h1>Algorithm Demonstrator</h1>
-            <input
-                type="text"
-                placeholder="Dataset Name"
-                value={datasetName}
-                onChange={(e) => setDatasetName(e.target.value)}
-            />
-            <input
-                type="text"
-                placeholder="Num Perturb Samples"
-                value={numPerturbSamples}
-                onChange={(e) => setNumPerturbSamples(e.target.value)}
-            />
-            <input
-                type="text"
-                placeholder="Top Node"
-                value={topNode}
-                onChange={(e) => setTopNode(e.target.value)}
-            />
-            <button
-                onClick={() => handleButtonClick('python3 GenData.py')}
-                disabled={loading}
-            >
+        <div className="Algorithm_Page">
+            <h2>Algorithm Demonstrator</h2>
+            <div className="input-container">
+                <input
+                    type="text"
+                    placeholder="Dataset Name"
+                    value={datasetName}
+                    onChange={(e) => setDatasetName(e.target.value)}
+                />
+                <input
+                    type="text"
+                    placeholder="Num Perturb Samples"
+                    value={numPerturbSamples}
+                    onChange={(e) => setNumPerturbSamples(e.target.value)}
+                />
+                <input
+                    type="text"
+                    placeholder="Top Node"
+                    value={topNode}
+                    onChange={(e) => setTopNode(e.target.value)}
+                />
+            </div>
+            <div className="button-container">
+                <button
+                    onClick={() => {
+                        const isWindows = navigator.platform.includes('Win');
+                        const command = isWindows ? 'powershell -Command "Invoke-WebRequest -Uri https://github.com/Shaw511/PGMExplainer/tree/master/PGM_Node -OutFile ..\\Algorithms\\Data\\PGM_Node"' : 'wget https://github.com/Shaw511/PGMExplainer/tree/master/PGM_Node -P ./Algorithms/Data';
+                        handleButtonClick(command);
+                    }}
+                    disabled={loading}
+                >
                 Load Github Code
-            </button>
-            <button
-                onClick={() => handleButtonClick('python3 GenData.py --dataset [dataset-name]')}
-                disabled={loading}
-            >
-                Generate Data
-            </button>
-            <button
-                onClick={() => handleButtonClick('python3 GenGroundTruth.py --dataset [dataset-name]')}
-                disabled={loading}
-            >
-                Generate Ground Truth
-            </button>
-            <button
-                onClick={() => handleButtonClick('python3 train.py --dataset [dataset-name]')}
-                disabled={loading}
-            >
-                Train Model
-            </button>
-            <button
-                onClick={() => handleButtonClick('python3 main.py --dataset [dataset-name] --num-perturb-samples [int1] --top-node [int2]')}
-                disabled={loading}
-            >
-                Run Main Program
-            </button>
-            <button
-                onClick={() => handleButtonClick('python3 evaluate_explanations.py --dataset [dataset-name] --num-perturb-samples [int1] --top-node [int2]')}
-                disabled={loading}
-            >
-                Evaluate Explanations
-            </button>
-            {loading ? <p>Loading...</p> : <p>{result}</p>}
+                </button>
+                <button
+                    onClick={() => handleButtonClick(`python3 GenData.py --dataset ${datasetName}`)}
+                    disabled={loading}
+                >
+                    Generate Data
+                </button>
+                <button
+                    onClick={() => handleButtonClick(`python3 GenGroundTruth.py --dataset ${datasetName}`)}
+                    disabled={loading}
+                >
+                    Generate Ground Truth
+                </button>
+                <button
+                    onClick={() => handleButtonClick(`python3 train.py --dataset ${datasetName}`)}
+                    disabled={loading}
+                >
+                    Train Model
+                </button>
+                <button
+                    onClick={() => handleButtonClick(`python3 main.py --dataset ${datasetName} --num-perturb-samples ${numPerturbSamples} --top-node ${topNode}`)}
+                    disabled={loading}
+                >
+                    Run Main Program
+                </button>
+                <button
+                    onClick={() => handleButtonClick(`python3 evaluate_explanations.py --dataset ${datasetName} --num-perturb-samples ${numPerturbSamples} --top-node ${topNode}`)}
+                    disabled={loading}
+                >
+                    Evaluate Explanations
+                </button>
+                {loading ? <p3>Loading...</p3> : <p3>{result}</p3>}
+            </div>
         </div>
     );
 

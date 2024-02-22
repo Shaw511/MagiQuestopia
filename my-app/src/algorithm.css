@@ -1,6 +1,80 @@
 .Algorithm_Page {
-    background: linear-gradient(to bottom, #ff00cc, #3333ff);
+    background: lightgrey;
     height: 2000px;
     display: flex;
     flex-direction: column;
+}
+
+
+container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    top: 50px;
+}
+
+h2 {
+    color: rgba(31, 31, 31, 0.91);
+    text-align: center;
+    margin-bottom: 20px;
+    top: 40px;
+    font-size: 48px;
+}
+
+.input-container {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    top: 150px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+.input-container input {
+    background-color: rgba(255, 255, 255, 0.84);
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    border: 1px solid rgba(31, 31, 31, 0.85);
+    border-radius: 4px;
+}
+.button-container {
+    position: absolute;
+    left: 50px;
+    top: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.button-container button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #333333;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.button-container button:hover{
+    background-color: #999999;
+    transform: scale(110%);
+    box-shadow: 0 8px 32px 0 #2a2828;
+}
+
+button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+p3 {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 16px;
+    color: #a19d9d;
 }
