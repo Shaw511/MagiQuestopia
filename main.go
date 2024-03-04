@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/streadway/amqp"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"io/ioutil"
@@ -193,7 +194,7 @@ func runCommand(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(output))
 }
 
-func sendToQueue(wg *sync.WaitGroup) {
+func sendToQueue(wg *sync.WaitGroup, command, datasetName, numPerturbSamples, topNode string) {
 	defer wg.Done()
 
 	// 连接消息队列
@@ -210,6 +211,9 @@ func sendToQueue(wg *sync.WaitGroup) {
 	}
 	defer channel.Close()
 
+	// 构建要发送的命令
+	commandStr := fmt.Sprintf("python3 GenGroundTruth.py --dataset %s", datasetName)
+
 	// 发送消息到消息队列
 	err = channel.Publish(
 		"",                // exchange
@@ -218,7 +222,7 @@ func sendToQueue(wg *sync.WaitGroup) {
 		false,             // immediate
 		amqp.Publishing{
 			ContentType: "text/plain",
-			Body:        []byte("python3 GenGroundTruth.py --dataset your_dataset_name"),
+			Body:        []byte(commandStr),
 		},
 	)
 	if err != nil {
@@ -226,6 +230,24 @@ func sendToQueue(wg *sync.WaitGroup) {
 	}
 
 	fmt.Println("Message sent to RabbitMQ")
+}
+
+func sendToQueueHandler(w http.ResponseWriter, r *http.Request) {
+	var params map[string]string
+	err := json.NewDecoder(r.Body).Decode(&params)
+	if err != nil {
+		log.Fatalf("Failed to decode request body: %v", err)
+		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
+		return
+	}
+
+	command := params["command"]
+	datasetName := params["datasetName"]
+	numPerturbSamples := params["numPerturbSamples"]
+	topNode := params["topNode"]
+
+	// 调用发送消息到消息队列的函数
+	sendToQueue(&wg, command, datasetName, numPerturbSamples, topNode)
 }
 
 func consumeFromQueue(wg *sync.WaitGroup) {
@@ -265,6 +287,8 @@ func consumeFromQueue(wg *sync.WaitGroup) {
 	}
 }
 
+var wg sync.WaitGroup
+
 func main() {
 	//// 初始化数据库连接 暂不测试数据库功能
 	//db, err := setupDB()
@@ -281,11 +305,13 @@ func main() {
 	//http.HandleFunc("/api/register", handleRegister)
 	//http.HandleFunc("/api/login", handleLogin)
 
-	var wg sync.WaitGroup
+	// 注册HTTP路由
+	http.HandleFunc("/api/send-to-queue", sendToQueueHandler)
+
+	// 在其他地方调用sendToQueueHandler函数之前，可以先调用wg.Add(1)来增加WaitGroup的计数
 
 	// 启动发送消息到消息队列的goroutine
 	wg.Add(1)
-	go sendToQueue(&wg)
 
 	// 启动接收消息队列中返回结果的goroutine
 	wg.Add(1)

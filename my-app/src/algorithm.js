@@ -9,10 +9,16 @@ function Algorithm () {
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState('');
 
-    const handleButtonClick = async (command) => {
+    const handleButtonClick = async (command, datasetName, numPerturbSamples, topNode) => {
         setLoading(true);
         try {
-            const response = await axios.get(`/api/run-command?command=${command}&dataset=${datasetName}&numPerturbSamples=${numPerturbSamples}&topNode=${topNode}`);
+            // 发起HTTP请求将参数传递给Golang后端
+            const response = await axios.post('/api/send-to-queue', {
+                command,
+                datasetName,
+                numPerturbSamples,
+                topNode
+            });
             setResult(response.data);
         } catch (error) {
             console.error(error);
