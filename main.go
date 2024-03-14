@@ -198,7 +198,7 @@ func sendToQueue(wg *sync.WaitGroup, command, datasetName, numPerturbSamples, to
 	defer wg.Done()
 
 	// 连接消息队列
-	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
+	conn, err := amqp.Dial("amqp://guest:guest@localhost:15672/")
 	if err != nil {
 		log.Fatalf("Failed to connect RabbitMQ: %v", err)
 	}
@@ -212,7 +212,7 @@ func sendToQueue(wg *sync.WaitGroup, command, datasetName, numPerturbSamples, to
 	defer channel.Close()
 
 	// 构建要发送的命令
-	commandStr := fmt.Sprintf("python3 GenGroundTruth.py --dataset %s", datasetName)
+	commandStr := fmt.Sprintf("python3 GenData.py --dataset %s", datasetName)
 
 	// 发送消息到消息队列
 	err = channel.Publish(

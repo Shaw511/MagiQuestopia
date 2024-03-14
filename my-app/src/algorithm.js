@@ -55,38 +55,38 @@ function Algorithm () {
                     onClick={() => {
                         const isWindows = navigator.platform.includes('Win');
                         const command = isWindows ? 'powershell -Command "Invoke-WebRequest -Uri https://github.com/Shaw511/PGMExplainer/tree/master/PGM_Node -OutFile ..\\Algorithms\\Data\\PGM_Node"' : 'wget https://github.com/Shaw511/PGMExplainer/tree/master/PGM_Node -P ./Algorithms/Data';
-                        handleButtonClick(command);
+                        handleButtonClick(command, datasetName, numPerturbSamples, topNode);
                     }}
                     disabled={loading}
                 >
                 Load Github Code
                 </button>
                 <button
-                    onClick={() => handleButtonClick(`python3 GenData.py --dataset ${datasetName}`)}
+                    onClick={() => handleButtonClick(`python3 GenData.py --dataset ${datasetName}`, datasetName, numPerturbSamples, topNode)}
                     disabled={loading}
                 >
                     Generate Data
                 </button>
                 <button
-                    onClick={() => handleButtonClick(`python3 GenGroundTruth.py --dataset ${datasetName}`)}
+                    onClick={() => handleButtonClick(`python3 GenGroundTruth.py --dataset ${datasetName}`, datasetName, numPerturbSamples, topNode)}
                     disabled={loading}
                 >
                     Generate Ground Truth
                 </button>
                 <button
-                    onClick={() => handleButtonClick(`python3 train.py --dataset ${datasetName}`)}
+                    onClick={() => handleButtonClick(`python3 train.py --dataset ${datasetName}`, datasetName, numPerturbSamples, topNode)}
                     disabled={loading}
                 >
                     Train Model
                 </button>
                 <button
-                    onClick={() => handleButtonClick(`python3 main.py --dataset ${datasetName} --num-perturb-samples ${numPerturbSamples} --top-node ${topNode}`)}
+                    onClick={() => handleButtonClick(`python3 main.py --dataset ${datasetName} --num-perturb-samples ${numPerturbSamples} --top-node ${topNode}`, datasetName, numPerturbSamples, topNode)}
                     disabled={loading}
                 >
                     Run Main Program
                 </button>
                 <button
-                    onClick={() => handleButtonClick(`python3 evaluate_explanations.py --dataset ${datasetName} --num-perturb-samples ${numPerturbSamples} --top-node ${topNode}`)}
+                    onClick={() => handleButtonClick(`python3 evaluate_explanations.py --dataset ${datasetName} --num-perturb-samples ${numPerturbSamples} --top-node ${topNode}`, datasetName, numPerturbSamples, topNode)}
                     disabled={loading}
                 >
                     Evaluate Explanations
