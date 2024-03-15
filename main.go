@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/websocket"
 	"github.com/streadway/amqp"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -194,6 +195,18 @@ func runCommand(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(output))
 }
 
+// RabbitMQ连接
+var amqpConn *amqp.Connection
+
+func connectToRabbitMQ() error {
+	var err error
+	amqpConn, err = amqp.Dial("amqp://guest:guest@localhost:15672/")
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func sendToQueue(wg *sync.WaitGroup, command, datasetName, numPerturbSamples, topNode string) {
 	defer wg.Done()
 
@@ -254,7 +267,7 @@ func consumeFromQueue(wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	// 连接消息队列
-	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
+	conn, err := amqp.Dial("amqp://guest:guest@localhost:15672/")
 	if err != nil {
 		log.Fatalf("Failed to connect RabbitMQ: %v", err)
 	}
@@ -289,6 +302,97 @@ func consumeFromQueue(wg *sync.WaitGroup) {
 
 var wg sync.WaitGroup
 
+var upgrader = websocket.Upgrader{
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
+}
+
+func handleWebSocket(w http.ResponseWriter, r *http.Request) {
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		log.Println("Error upgrading to WebSocket:", err)
+		return
+	}
+	defer conn.Close()
+
+	if amqpConn == nil {
+		err := connectToRabbitMQ()
+		if err != nil {
+			log.Fatalf("Failed to connect to RabbitMQ: %v", err)
+			return
+		}
+	}
+
+	ch, err := amqpConn.Channel()
+	if err != nil {
+		log.Fatalf("Failed to open a channel: %v", err)
+		return
+	}
+	defer ch.Close()
+
+	for {
+		_, message, err := conn.ReadMessage()
+		if err != nil {
+			log.Println("Error reading message from WebSocket:", err)
+			break
+		}
+
+		// 将消息发送给RabbitMQ
+		queueName := "algorithm_queue"
+		err = ch.Publish("", queueName, false, false, amqp.Publishing{
+			ContentType: "application/json",
+			Body:        message,
+		})
+		if err != nil {
+			log.Fatalf("Failed to publish a message: %v", err)
+			return
+		}
+
+		// 模拟处理消息并返回结果
+		conn.WriteMessage(websocket.TextMessage, []byte("Message received by WebSocket server"))
+	}
+	//conn, err := upgrader.Upgrade(w, r, nil)
+	//if err != nil {
+	//	log.Println("Error upgrading to WebSocket:", err)
+	//	return
+	//}
+	//defer conn.Close()
+	//
+	//for {
+	//	_, message, err := conn.ReadMessage()
+	//	if err != nil {
+	//		log.Println("Error reading message from WebSocket:", err)
+	//		break
+	//	}
+	//
+	//	// 将消息发送给RabbitMQ
+	//	queueName := "algorithm_queue"
+	//	amqpConn, err := amqp.Dial("amqp://guest:guest@localhost:15672/")
+	//	if err != nil {
+	//		log.Fatalf("Failed to connect to RabbitMQ: %v", err)
+	//	}
+	//	defer amqpConn.Close()
+	//
+	//	ch, err := amqpConn.Channel()
+	//	if err != nil {
+	//		log.Fatalf("Failed to open a channel: %v", err)
+	//	}
+	//	defer ch.Close()
+	//
+	//	err = ch.Publish("", queueName, false, false, amqp.Publishing{
+	//		ContentType: "application/json",
+	//		Body:        message,
+	//	})
+	//	if err != nil {
+	//		log.Fatalf("Failed to publish a message: %v", err)
+	//	}
+	//
+	//	// 模拟处理消息并返回结果
+	//	conn.WriteMessage(websocket.TextMessage, []byte("Message received by WebSocket server"))
+	//}
+}
+
 func main() {
 	//// 初始化数据库连接 暂不测试数据库功能
 	//db, err := setupDB()
@@ -306,16 +410,17 @@ func main() {
 	//http.HandleFunc("/api/login", handleLogin)
 
 	// 注册HTTP路由
-	http.HandleFunc("/api/send-to-queue", sendToQueueHandler)
+	//http.HandleFunc("/api/send-to-queue", sendToQueueHandler)
+	http.HandleFunc("/ws", handleWebSocket)
 
 	// 在其他地方调用sendToQueueHandler函数之前，可以先调用wg.Add(1)来增加WaitGroup的计数
 
 	// 启动发送消息到消息队列的goroutine
-	wg.Add(1)
+	//wg.Add(1)
 
 	// 启动接收消息队列中返回结果的goroutine
-	wg.Add(1)
-	go consumeFromQueue(&wg)
+	//wg.Add(1)
+	//go consumeFromQueue(&wg)
 
 	// 配置静态文件路由
 	staticDir := "my-app/build" // 替换成您的前端构建版本的路径
@@ -327,7 +432,7 @@ func main() {
 	fmt.Printf("Server listening on port %s\n", port)
 
 	// 等待发送消息和接收返回结果的goroutine完成
-	wg.Wait()
+	//wg.Wait()
 
 	log.Fatal(http.ListenAndServe(port, nil))
 

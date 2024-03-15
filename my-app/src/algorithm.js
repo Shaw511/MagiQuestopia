@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import "./algorithm.css"
+import "./algorithm.css";
 
 function Algorithm () {
     const [datasetName, setDatasetName] = useState('');
@@ -12,17 +12,28 @@ function Algorithm () {
     const handleButtonClick = async (command, datasetName, numPerturbSamples, topNode) => {
         setLoading(true);
         try {
-            // 发起HTTP请求将参数传递给Golang后端
-            const response = await axios.post('/api/send-to-queue', {
-                command,
-                datasetName,
-                numPerturbSamples,
-                topNode
-            });
-            setResult(response.data);
+            //建立WebSocket连接
+            const socket = new WebSocket('ws://localhost:8000');
+            setResult(`${command}, ${datasetName}, ${numPerturbSamples}, ${topNode}`);
+            socket.onopen = () => {
+                socket.send(JSON.stringify({command, datasetName, numPerturbSamples, topNode}));
+                setResult('Message sent to WebSocket server');
+                setLoading(false);
+            }
+            socket.onmessage = (event) => {
+                setResult(event.data);
+                setLoading(false);
+            };
+
+            socket.onerror = (error) => {
+                console.error(error);
+                setResult('Error occurred while sending message to WebSocket server');
+                setLoading(false);
+            };
+
         } catch (error) {
             console.error(error);
-            setResult('Error occurred while running the command.');
+            setResult('Error occurred while sending message to RabbitMQ');
         }
         setLoading(false);
     };
