@@ -13,7 +13,7 @@ function Algorithm () {
         setLoading(true);
         try {
             //建立WebSocket连接
-            const socket = new WebSocket('ws://localhost:8000');
+            const socket = new WebSocket('ws://localhost:8000/MagiQuestopia/websocket');
             setResult(`${command}, ${datasetName}, ${numPerturbSamples}, ${topNode}`);
             socket.onopen = () => {
                 socket.send(JSON.stringify({command, datasetName, numPerturbSamples, topNode}));
@@ -25,9 +25,9 @@ function Algorithm () {
                 setLoading(false);
             };
 
-            socket.onerror = (error) => {
-                console.error(error);
-                setResult('Error occurred while sending message to WebSocket server');
+            socket.onerror = function(event)  {
+                const error = event.error;
+                setResult('Error occurred while sending message to WebSocket server:(notice sometimes there would be nothing specific)', error);
                 setLoading(false);
             };
 

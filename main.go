@@ -309,12 +309,16 @@ var upgrader = websocket.Upgrader{
 }
 
 func handleWebSocket(w http.ResponseWriter, r *http.Request) {
+	// 升级HTTP连接为WebSocket连接
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println("Error upgrading to WebSocket:", err)
 		return
 	}
 	defer conn.Close()
+
+	// 连接消息队列
+	amqpConn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
 
 	if amqpConn == nil {
 		err := connectToRabbitMQ()
@@ -337,7 +341,8 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 			log.Println("Error reading message from WebSocket:", err)
 			break
 		}
-
+		//打印收到的消息
+		fmt.Println("Received messageL", string(message))
 		// 将消息发送给RabbitMQ
 		queueName := "algorithm_queue"
 		err = ch.Publish("", queueName, false, false, amqp.Publishing{
@@ -352,45 +357,6 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 		// 模拟处理消息并返回结果
 		conn.WriteMessage(websocket.TextMessage, []byte("Message received by WebSocket server"))
 	}
-	//conn, err := upgrader.Upgrade(w, r, nil)
-	//if err != nil {
-	//	log.Println("Error upgrading to WebSocket:", err)
-	//	return
-	//}
-	//defer conn.Close()
-	//
-	//for {
-	//	_, message, err := conn.ReadMessage()
-	//	if err != nil {
-	//		log.Println("Error reading message from WebSocket:", err)
-	//		break
-	//	}
-	//
-	//	// 将消息发送给RabbitMQ
-	//	queueName := "algorithm_queue"
-	//	amqpConn, err := amqp.Dial("amqp://guest:guest@localhost:15672/")
-	//	if err != nil {
-	//		log.Fatalf("Failed to connect to RabbitMQ: %v", err)
-	//	}
-	//	defer amqpConn.Close()
-	//
-	//	ch, err := amqpConn.Channel()
-	//	if err != nil {
-	//		log.Fatalf("Failed to open a channel: %v", err)
-	//	}
-	//	defer ch.Close()
-	//
-	//	err = ch.Publish("", queueName, false, false, amqp.Publishing{
-	//		ContentType: "application/json",
-	//		Body:        message,
-	//	})
-	//	if err != nil {
-	//		log.Fatalf("Failed to publish a message: %v", err)
-	//	}
-	//
-	//	// 模拟处理消息并返回结果
-	//	conn.WriteMessage(websocket.TextMessage, []byte("Message received by WebSocket server"))
-	//}
 }
 
 func main() {
@@ -411,7 +377,7 @@ func main() {
 
 	// 注册HTTP路由
 	//http.HandleFunc("/api/send-to-queue", sendToQueueHandler)
-	http.HandleFunc("/ws", handleWebSocket)
+	http.HandleFunc("/MagiQuestopia/websocket", handleWebSocket)
 
 	// 在其他地方调用sendToQueueHandler函数之前，可以先调用wg.Add(1)来增加WaitGroup的计数
 
@@ -429,7 +395,7 @@ func main() {
 
 	// 启动服务器，监听端口
 	port := ":8000"
-	fmt.Printf("Server listening on port %s\n", port)
+	fmt.Printf("WebSocket Server listening on port %s\n", port)
 
 	// 等待发送消息和接收返回结果的goroutine完成
 	//wg.Wait()
