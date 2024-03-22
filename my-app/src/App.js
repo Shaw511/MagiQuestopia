@@ -1,6 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
 import Algorithm from "./algorithm";
+import Sub_Politics from "./sub_politics"
+
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Routes, Route, Outlet, Link} from 'react-router-dom';
@@ -163,7 +165,7 @@ function Home(){
           <div className="menu">
             <button className="menu-btn">图书分类</button>
             <div className="dropdown-content">
-              <a href="#">政治军事</a>
+              <Link to="/sub_politics">政治军事</Link>
               <a href="#">人生哲学</a>
               <a href="#">前沿科技</a>
             </div>
@@ -241,6 +243,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home/>}/>
             <Route path="/algorithm" element={<Algorithm/>}/>
+            <Route path="/sub_politics" element={<Sub_Politics/>}/>
             <Route path="*" element={<NotFoundPage/>}/>
           <Route/>
         </Routes>
