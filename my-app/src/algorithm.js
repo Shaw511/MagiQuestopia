@@ -9,14 +9,14 @@ function Algorithm () {
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState('');
 
-    const handleButtonClick = async (command, datasetName, numPerturbSamples, topNode) => {
+    const handleButtonClick = async (mode, command, datasetName, numPerturbSamples, topNode) => {
         setLoading(true);
         try {
             //建立WebSocket连接
             const socket = new WebSocket('ws://localhost:8000/MagiQuestopia/websocket');
-            setResult(`${command}, ${datasetName}, ${numPerturbSamples}, ${topNode}`);
+            setResult(`${mode}, ${command}, ${datasetName}, ${numPerturbSamples}, ${topNode}`);
             socket.onopen = () => {
-                socket.send(JSON.stringify({command, datasetName, numPerturbSamples, topNode}));
+                socket.send(JSON.stringify({mode, command, datasetName, numPerturbSamples, topNode}));
                 setResult('Message sent to WebSocket server');
                 setLoading(false);
             }
@@ -73,31 +73,31 @@ function Algorithm () {
                 Load Github Code
                 </button>
                 <button
-                    onClick={() => handleButtonClick(`python3 GenData.py --dataset ${datasetName}`, datasetName, numPerturbSamples, topNode)}
+                    onClick={() => handleButtonClick('gen_data', `python3 GenData.py --dataset ${datasetName}`, datasetName, numPerturbSamples, topNode)}
                     disabled={loading}
                 >
                     Generate Data
                 </button>
                 <button
-                    onClick={() => handleButtonClick(`python3 GenGroundTruth.py --dataset ${datasetName}`, datasetName, numPerturbSamples, topNode)}
+                    onClick={() => handleButtonClick('gen_truth', `python3 GenGroundTruth.py --dataset ${datasetName}`, datasetName, numPerturbSamples, topNode)}
                     disabled={loading}
                 >
                     Generate Ground Truth
                 </button>
                 <button
-                    onClick={() => handleButtonClick(`python3 train.py --dataset ${datasetName}`, datasetName, numPerturbSamples, topNode)}
+                    onClick={() => handleButtonClick('train_model',`python3 train.py --dataset ${datasetName}`, datasetName, numPerturbSamples, topNode)}
                     disabled={loading}
                 >
                     Train Model
                 </button>
                 <button
-                    onClick={() => handleButtonClick(`python3 main.py --dataset ${datasetName} --num-perturb-samples ${numPerturbSamples} --top-node ${topNode}`, datasetName, numPerturbSamples, topNode)}
+                    onClick={() => handleButtonClick('explain_pgm', `python3 main.py --dataset ${datasetName} --num-perturb-samples ${numPerturbSamples} --top-node ${topNode}`, datasetName, numPerturbSamples, topNode)}
                     disabled={loading}
                 >
-                    Run Main Program
+                    PGM Explain
                 </button>
                 <button
-                    onClick={() => handleButtonClick(`python3 evaluate_explanations.py --dataset ${datasetName} --num-perturb-samples ${numPerturbSamples} --top-node ${topNode}`, datasetName, numPerturbSamples, topNode)}
+                    onClick={() => handleButtonClick('eval_explain',`python3 evaluate_explanations.py --dataset ${datasetName} --num-perturb-samples ${numPerturbSamples} --top-node ${topNode}`, datasetName, numPerturbSamples, topNode)}
                     disabled={loading}
                 >
                     Evaluate Explanations
