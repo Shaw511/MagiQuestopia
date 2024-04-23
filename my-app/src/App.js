@@ -5,7 +5,7 @@ import Sub_Politics from "./sub_politics"
 
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Routes, Route, Outlet, Link} from 'react-router-dom';
+import { HashRouter, Routes, Route, Outlet, Link} from 'react-router-dom';
 import './fonts/font.css'
 
 
