@@ -9,6 +9,7 @@ function Algorithm () {
     const [topNode, setTopNode] = useState('');
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState('');
+    const [imageData, setImageData] = useState('');
 
     const handleButtonClick = async (mode, command, datasetName, numPerturbSamples, topNode) => {
         setLoading(true);
@@ -25,6 +26,14 @@ function Algorithm () {
                 setResult(event.data);
                 setLoading(false);
             };
+            // socket.onopen = () => {
+            //     console.log('WebSocket Client Connected');
+            //     socket.send('subscribe_algorithm_result_queue');
+            // };
+            // socket.onmessage = (message) => {
+            //     const data = JSON.parse(message.data);
+            //     setImageData(data.imageData);
+            // };
 
             socket.onerror = function(event)  {
                 const error = event.error;
@@ -63,16 +72,16 @@ function Algorithm () {
                 />
             </div>
             <div className="button-container">
-                <button
-                    onClick={() => {
-                        const isWindows = navigator.platform.includes('Win');
-                        const command = isWindows ? 'powershell -Command "Invoke-WebRequest -Uri https://github.com/Shaw511/PGMExplainer/tree/master/PGM_Node -OutFile ..\\Algorithms\\Data\\PGM_Node"' : 'wget https://github.com/Shaw511/PGMExplainer/tree/master/PGM_Node -P ./Algorithms/Data';
-                        handleButtonClick(command, datasetName, numPerturbSamples, topNode);
-                    }}
-                    disabled={loading}
-                >
-                Load Github Code
-                </button>
+                {/*<button*/}
+                {/*    onClick={() => {*/}
+                {/*        const isWindows = navigator.platform.includes('Win');*/}
+                {/*        const command = isWindows ? 'powershell -Command "Invoke-WebRequest -Uri https://github.com/Shaw511/PGMExplainer/tree/master/PGM_Node -OutFile ..\\Algorithms\\Data\\PGM_Node"' : 'wget https://github.com/Shaw511/PGMExplainer/tree/master/PGM_Node -P ./Algorithms/Data';*/}
+                {/*        handleButtonClick(command, datasetName, numPerturbSamples, topNode);*/}
+                {/*    }}*/}
+                {/*    disabled={loading}*/}
+                {/*>*/}
+                {/*Load Github Code*/}
+                {/*</button>*/}
                 <button
                     onClick={() => handleButtonClick('gen_data', `python3 GenData.py --dataset ${datasetName}`, datasetName, numPerturbSamples, topNode)}
                     disabled={loading}
@@ -86,7 +95,7 @@ function Algorithm () {
                     Generate Ground Truth
                 </button>
                 <button
-                    onClick={() => handleButtonClick('train_model',`python3 train.py --dataset ${datasetName}`, datasetName, numPerturbSamples, topNode)}
+                    onClick={() => handleButtonClick('train_model', `python3 train.py --dataset ${datasetName}`, datasetName, numPerturbSamples, topNode)}
                     disabled={loading}
                 >
                     Train Model
@@ -98,12 +107,15 @@ function Algorithm () {
                     PGM Explain
                 </button>
                 <button
-                    onClick={() => handleButtonClick('eval_explain',`python3 evaluate_explanations.py --dataset ${datasetName} --num-perturb-samples ${numPerturbSamples} --top-node ${topNode}`, datasetName, numPerturbSamples, topNode)}
+                    onClick={() => handleButtonClick('eval_explain', `python3 evaluate_explanations.py --dataset ${datasetName} --num-perturb-samples ${numPerturbSamples} --top-node ${topNode}`, datasetName, numPerturbSamples, topNode)}
                     disabled={loading}
                 >
                     Evaluate Explanations
                 </button>
                 {loading ? <p3>Loading...</p3> : <p3>{result}</p3>}
+            </div>
+            <div className="image-container">
+                {imageData && <img src={`data:image/png;base64,${imageData}`} alt="Graph"/>}
             </div>
         </div>
     );
