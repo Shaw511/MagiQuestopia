@@ -86,31 +86,31 @@ function Algorithm () {
                     onClick={() => handleButtonClick('gen_data', `python3 GenData.py --dataset ${datasetName}`, datasetName, numPerturbSamples, topNode)}
                     disabled={loading}
                 >
-                    Generate Data
+                    Generate Data 合成数据集
                 </button>
-                <button
-                    onClick={() => handleButtonClick('gen_truth', `python3 GenGroundTruth.py --dataset ${datasetName}`, datasetName, numPerturbSamples, topNode)}
-                    disabled={loading}
-                >
-                    Generate Ground Truth
-                </button>
+                {/*<button*/}
+                {/*    onClick={() => handleButtonClick('gen_truth', `python3 GenGroundTruth.py --dataset ${datasetName}`, datasetName, numPerturbSamples, topNode)}*/}
+                {/*    disabled={loading}*/}
+                {/*>*/}
+                {/*    Generate Ground Truth*/}
+                {/*</button>*/}
                 <button
                     onClick={() => handleButtonClick('train_model', `python3 train.py --dataset ${datasetName}`, datasetName, numPerturbSamples, topNode)}
                     disabled={loading}
                 >
-                    Train Model
+                    Train Model 训练模型
                 </button>
                 <button
                     onClick={() => handleButtonClick('explain_pgm', `python3 main.py --dataset ${datasetName} --num-perturb-samples ${numPerturbSamples} --top-node ${topNode}`, datasetName, numPerturbSamples, topNode)}
                     disabled={loading}
                 >
-                    PGM Explain
+                    PGM Explain 生成解释
                 </button>
                 <button
                     onClick={() => handleButtonClick('eval_explain', `python3 evaluate_explanations.py --dataset ${datasetName} --num-perturb-samples ${numPerturbSamples} --top-node ${topNode}`, datasetName, numPerturbSamples, topNode)}
                     disabled={loading}
                 >
-                    Evaluate Explanations
+                    Evaluate Explanations 指标评估
                 </button>
                 {loading ? <p3>Loading...</p3> : <p3>{result}</p3>}
             </div>
