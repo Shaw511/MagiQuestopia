@@ -50,23 +50,24 @@ function Algorithm () {
 
     return (
         <div className="Algorithm_Page">
-            <h2>Algorithm Demonstrator</h2>
+            <img alt="Logo" className="logo" src={require('./magi-logo.png')}/>
+            <h2>图神经网络节点分类演示器</h2>
             <div className="input-container">
                 <input
                     type="text"
-                    placeholder="Dataset Name"
+                    placeholder="请输入数据集名称"
                     value={datasetName}
                     onChange={(e) => setDatasetName(e.target.value)}
                 />
                 <input
                     type="text"
-                    placeholder="Num Perturb Samples"
+                    placeholder="请输入样本扰动次数"
                     value={numPerturbSamples}
                     onChange={(e) => setNumPerturbSamples(e.target.value)}
                 />
                 <input
                     type="text"
-                    placeholder="Top Node"
+                    placeholder="请输入top-node"
                     value={topNode}
                     onChange={(e) => setTopNode(e.target.value)}
                 />

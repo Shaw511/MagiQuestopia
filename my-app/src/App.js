@@ -160,7 +160,7 @@ function Home(){
 
   return (
       <div className="Home">
-        <img alt="Logo" className="logo" src={require('./magi-logo-w.png')}/>
+        <img alt="Logo" className="logo" src={require('./magi-logo.png')}/>
         <div className="menu-container">
           <div className="menu">
             <button className="menu-btn">图书分类</button>
