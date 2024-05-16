@@ -32,6 +32,7 @@ h2 {
     align-items: flex-start;
 }
 .input-container input {
+    text-align: center;
     background-color: rgba(255, 255, 255, 0.84);
     display: block;
     width: 100%;
@@ -43,7 +44,7 @@ h2 {
 }
 .button-container {
     position: absolute;
-    left: 50px;
+    left: 80px;
     top: 200px;
     display: flex;
     flex-direction: column;
@@ -52,9 +53,11 @@ h2 {
 
 .button-container button {
     display: block;
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
+    font-size: 20px;
+    font-family: SuXin-cn;
+    width: 150%;
+    padding: 20px;
+    margin-bottom: 20px;
     background-color: #333333;
     color: #ffffff;
     border: none;
@@ -86,4 +89,52 @@ p3 {
     left: 10px;
     width: 200px;
     height: 100px;
+}
+.tooltip {
+    text-align: center;
+    line-height:1.5;
+    position: absolute;
+    background-color: #bd4974;
+    border: 1px solid #c79696;
+    padding: 10px;
+    top:0px;
+    left:180%;
+    width:150%;
+    border-radius: 5px;
+    font-size: 14px;
+    color: white;
+    display: none;
+}
+
+.tooltip.show {
+    display: block;
+}
+
+.checkbox-container {
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    right:50px;
+    top: 80px;
+
+}
+
+.checkbox-container input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #333;
+    border-radius: 5px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.checkbox-container input[type="checkbox"]:checked {
+    background-color: #007bff;
+}
+
+.checkbox-container label {
+    font-size: 16px;
 }
