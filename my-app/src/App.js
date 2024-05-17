@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter, Routes, Route, Outlet, Link} from 'react-router-dom';
 import './fonts/font.css'
+import NhopDisplay from "./algorithm-nhop-display";
 
 
 const Login = () => {
@@ -135,7 +136,7 @@ const Login = () => {
 };
 
 function NotFoundPage() {
-  return <h1>404 页面未找到</h1>;
+  return <h1 style={{ textAlign: 'center', color: '#fff', fontSize: '3rem', textShadow: '2px 2px 4px #000', background: 'linear-gradient(45deg, #ff6b6b, #556270)', padding: '20px', borderRadius: '10px' }}>404 页面未找到</h1>;
 }
 
 function Home(){
@@ -160,7 +161,7 @@ function Home(){
 
   return (
       <div className="Home">
-        <img alt="Logo" className="logo" src={require('./magi-logo.png')}/>
+        <img alt="Logo" className="logo" src={require('./magi-logo-w.png')}/>
         <div className="menu-container">
           <div className="menu">
             <button className="menu-btn">图书分类</button>
@@ -243,6 +244,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home/>}/>
             <Route path="/algorithm" element={<Algorithm/>}/>
+          <Route path="/algorithm-nhop-display" element={<NhopDisplay/>}/>
             <Route path="/sub_politics" element={<Sub_Politics/>}/>
             <Route path="*" element={<NotFoundPage/>}/>
           <Route/>

@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import "./algorithm.css";
+import './App.css';
+import Home from "./App";
+import NotFoundPage from "./App";
+import {HashRouter, Route, Routes, Outlet, Link} from "react-router-dom";
+import Sub_Politics from "./sub_politics";
+import NhopDisplay from "./algorithm-nhop-display";
+
 
 function Algorithm () {
 
@@ -22,7 +29,7 @@ function Algorithm () {
         setIsChecked2(!isChecked2);
     };
 
-    const handleButtonClick = async (action, mode, command, datasetName, numPerturbSamples, topNode) => {
+    const handleButtonClick = async (mode, command, datasetName, numPerturbSamples, topNode) => {
         if (!datasetName || !numPerturbSamples || !topNode) {
             alert("请先在输入框中键入参数！");
             return;
@@ -57,7 +64,7 @@ function Algorithm () {
 
     return (
         <div className="Algorithm_Page">
-            <img alt="Logo" className="logo" src={require('./magi-logo.png')}/>
+            <img alt="Logo" className="logo" src={require('./magi-logo-w.png')}/>
             <h2>图神经网络节点分类演示器</h2>
             <div className="input-container">
                 <input
@@ -88,7 +95,9 @@ function Algorithm () {
                 >
                     合成数据集
                 </button>
-                <div className={`tooltip ${tooltip === 'gen_data' ? 'show' : ''}`}>在基图的基础上进行添加或减少随机边的扰动操作，添加特征结构motif，并对每个节点添加特征值。</div>
+                <div
+                    className={`tooltip ${tooltip === 'gen_data' ? 'show' : ''}`}>在基图的基础上进行添加或减少随机边的扰动操作，添加特征结构motif，并对每个节点添加特征值。
+                </div>
                 {/*<button*/}
                 {/*    onClick={() => handleButtonClick('gen_truth', `python3 GenGroundTruth.py --dataset ${datasetName}`, datasetName, numPerturbSamples, topNode)}*/}
                 {/*    disabled={loading}*/}
@@ -103,7 +112,10 @@ function Algorithm () {
                 >
                     训练模型
                 </button>
-                <div className={`tooltip ${tooltip === 'train_model' ? 'show' : ''}`}>采用三层的图神经网络，将特征个数作为输入维度和层数，经过前向传播过程，返回[batch_size x num_nodes x embedding]格式的三维嵌入矩阵，将数据集划分为训练集、检验集和测试集，在1000个epoch上迭代训练，使用0.001的学习率，优化器采用Adam优化器。</div>
+                <div
+                    className={`tooltip ${tooltip === 'train_model' ? 'show' : ''}`}>采用三层的图神经网络，将特征个数作为输入维度和层数，经过前向传播过程，返回[batch_size
+                    x num_nodes x embedding]格式的三维嵌入矩阵，将数据集划分为训练集、检验集和测试集，在1000个epoch上迭代训练，使用0.001的学习率，优化器采用Adam优化器。
+                </div>
                 <button
                     onMouseEnter={() => setTooltip('explain_pgm')}
                     onMouseLeave={() => setTooltip('')}
@@ -112,7 +124,9 @@ function Algorithm () {
                 >
                     生成解释
                 </button>
-                <div className={`tooltip ${tooltip === 'explain_pgm' ? 'show' : ''}`}>对生成和预处理之后的样本数据进行扰动，形成给定p值的伯努利分布，观察扰动数据后的预测结果是否发生变化，如果变化则将待解释节点的目标样本值设为1，否则设为0。在对数据格式处理后，对于目标节点的邻居节点，分别计算卡方检验值和因果效应值，其中因果效应值代表了邻居节点对预测结果影响的显著性水平。</div>
+                <div
+                    className={`tooltip ${tooltip === 'explain_pgm' ? 'show' : ''}`}>对生成和预处理之后的样本数据进行扰动，形成给定p值的伯努利分布，观察扰动数据后的预测结果是否发生变化，如果变化则将待解释节点的目标样本值设为1，否则设为0。在对数据格式处理后，对于目标节点的邻居节点，分别计算卡方检验值和因果效应值，其中因果效应值代表了邻居节点对预测结果影响的显著性水平。
+                </div>
                 <button
                     onMouseEnter={() => setTooltip('eval_explain')}
                     onMouseLeave={() => setTooltip('')}
@@ -121,7 +135,9 @@ function Algorithm () {
                 >
                     指标评估
                 </button>
-                <div className={`tooltip ${tooltip === 'eval_explain' ? 'show' : ''}`}>每个数据集上的Accuracy和Precision</div>
+                <div
+                    className={`tooltip ${tooltip === 'eval_explain' ? 'show' : ''}`}>每个数据集上的Accuracy和Precision
+                </div>
                 {loading ? <p3>Loading...</p3> : <p3>{result}</p3>}
             </div>
 
@@ -139,11 +155,27 @@ function Algorithm () {
                     <label>确认参数已填写</label>
                 </div>
             </div>
-
-
+            <div className="display-switch">
+                <Link to="/algorithm">算法运行</Link>
+                <Link to="/algorithm-nhop-display">过程输出</Link>
+            </div>
         </div>
     );
 
-    };
+};
+
+function App() {
+    return (
+        <Routes>
+            <Route path="/" element={<Home/>}/>
+            <Route path="/algorithm" element={<Algorithm/>}/>
+            <Route path="/algorithm-nhop-display" element={<NhopDisplay/>}/>
+            <Route path="/sub_politics" element={<Sub_Politics/>}/>
+            <Route path="*" element={<NotFoundPage/>}/>
+            <Route/>
+        </Routes>
+    );
+};
+
 
     export default Algorithm;
